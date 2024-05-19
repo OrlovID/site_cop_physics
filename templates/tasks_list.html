@@ -1,0 +1,42 @@
+{% extends "base_page.html" %}
+
+{% block page-name %}
+Сборник задач по физике
+{% endblock %}
+
+{% block page-title %}
+Список задач
+{% endblock %}
+
+{% block page-lead %}
+Все задачи извлекаются из БД и динамически вставляются в таблицу.
+{% endblock %}
+
+{% block content %}
+<div class="container px-4 py-5" id="table-content">
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th scope="col" class="py-3">#</th>
+                    <th scope="col" class="py-3">Задача</th>
+                    <th scope="col" class="py-3">Краткое описание</th>
+                    <th scope="col" class="py-3">Тема</th>
+                    <th scope="col" class="py-3">Сложность</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cnt, task, descr, theme, cmplx in tasks_lst %}
+                <tr>
+                    <td class="py-3">{{ cnt }}</td>
+                    <td class="py-3">{{ task }}</td>
+                    <td class="py-3">{{ descr }}</td>
+                    <td class="py-3">{{ theme }}</td>
+                    <td class="py-3">{{ cmplx }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+      </div>
+</div>
+{% endblock %}

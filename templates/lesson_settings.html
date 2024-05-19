@@ -1,0 +1,77 @@
+{% extends "base_page.html" %}
+
+{% block page-name %}
+Сборник задач по физике
+{% endblock %}
+
+{% block page-title %}
+Настройки задач
+{% endblock %}
+
+{% block page-lead %}
+На данной странице Вы можете задать критерии, по которым сайт сформирует для Вас список задач.
+{% endblock %}
+
+{% block content %}
+<div class="container-sm px-5 py-5" id="lesson-settings">
+    <div class="row px-5 py-2">
+        <h4>Пояснение</h4>
+        <p>
+            Основное предназначение данного сайта - предложить пользователю список задач по физике, с проверкой введенного ответа.
+            Для формирования списка Вам нужно задать критерии выбора в форме ниже. Некоторые значения заданы по умолчанию.
+            Чтобы перейти к списку с условиями, нажмите кнопку <span class="fw-bold">Подтвердить</span>.
+        </p>
+    </div>
+    <form method="post">
+        <div class="row px-5 py-2">
+            <h2>Настройки</h2>
+        </div>
+        <div class="row px-5 py-2">
+            <div class="col-sm-12">
+                <h4>Выберете темы ...</h4>
+                <div class="list-group">
+                    {% for idx, theme in idx_themes %}
+                    <label class="list-group-item d-flex gap-2">
+                        <input class="form-check-input flex-shrink-0" type="checkbox" name="theme_{{ idx }}" value="ON" checked>
+                        <span>{{ theme }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <h4>Выберете количество задач...</h4>
+            <p>Выберете из двух опций и введите число</p>
+            <div class="col-md-6">
+                <div class="list-group">
+                    <label class="list-group-item d-flex gap-2">
+                        <input class="form-check-input flex-shrink-0" type="radio" name="options"
+                               id="listGroupRadios1" value="0" checked>
+                            <span>
+                                Количество по каждой теме
+                                <small class="d-block text-body-secondary">
+                                    Число соответствует количеству задач на каждую тему</small>
+                            </span>
+                    </label>
+                    <label class="list-group-item d-flex gap-2">
+                        <input class="form-check-input flex-shrink-0" type="radio" name="options"
+                                id="listGroupRadios2" value="1">
+                            <span>
+                                Общее количество
+                                <small class="d-block text-body-secondary">
+                                    Число соответствует общему количеству задач</small>
+                            </span>
+                     </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label for="quantity">Введите количество</label>
+                <input type="number" class="form-control input-lg" id="quantity" name="quantity" min="1" value required>
+            </div>
+        </div>
+        <div class="row px-5 py-2">
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary" formaction="/lesson-main">Подтвердить</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

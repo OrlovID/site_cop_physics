@@ -1,0 +1,60 @@
+{% extends "base_page.html" %}
+
+{% block page-name %}
+Задача по физике
+{% endblock %}
+
+{% block page-title %}
+Случайная задача по физике
+{% endblock %}
+
+{% block page-lead %}
+Решите задачу, выбранную случайным образом.
+{% endblock %}
+
+{% block content %}
+<div class="container px-5 py-5" id="lesson-random">
+    <div class="row px-5 py-2">
+        <div class="col-md-4">
+            <h3 class="fs-2">{{ name }}</h3>
+        </div>
+        <div class="col-md-4">
+            <div class="row px-5 py-2">
+                <h5 class="fs-4">Из раздела: {{ theme }}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="row px-5 py-2">
+        <div class="col d-flex">
+            <p>{{ description }}</p>
+        </div>
+    </div>
+    <form method="get">
+        <div class="row px-5 py-2">
+            <div class="col-md-6">
+                <label for="user_answer">Ваш Ответ:</label>
+                <input type="text" class="form-control input-lg" name="user_answer" id="user_answer" value required>
+            </div>
+        </div>
+        <div class="row px-5 py-2">
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-primary" formaction="/lesson-random">Ответить</button>
+            </div>
+        </div>
+    </form>
+    {% if show_conclusion %}
+    <div class="row px-5 py-2">
+       <h2 class="pb-2 border-bottom"></h2>
+        <p>Уважаемый пользователь, Ваш ответ принят. Результат: <br>
+            {{ comment }}
+        </p>
+    </div>
+    {% endif %}
+    <div class="row px-5 py-2">
+        <div class="col-md-6">
+
+            <a href="/lesson-random-reset">Новую задачу</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

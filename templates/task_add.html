@@ -1,0 +1,82 @@
+{% extends "base_page.html" %}
+
+{% block page-name %}
+Сборник задач по физике
+{% endblock %}
+
+{% block page-title %}
+Добавить задачу
+{% endblock %}
+
+{% block page-lead %}
+Когда вы нажмёте на кнопку &laquo;Отправить&raquo;, веб-приложению отправится POST-запрос.
+При этом в полях <span class="fst-italic">Имя</span> и <span class="fst-italic">Email</span> есть атрибут
+<code>value required</code>, который подсказывает пользователю о необходимости заполнения — это свойство Bootstrap.
+{% endblock %}
+
+
+{% block content %}
+<div class="container-sm px-5 py-5" id="task-form">
+    <form method="post">
+        <div class="row px-5 py-2">
+            <h3>Ваши контактные данные</h3>
+        </div>
+        <div class="row px-5 py-2">
+            <div class="col-md-6">
+                <label for="name">Ваше имя:</label>
+                <input type="text" class="form-control input-lg" name="name" id="name" placeholder="Иван" value required>
+            </div>
+            <div class="col-md-6">
+                <label for="email">Ваш контактный email:</label>
+                <input type="text" class="form-control input-lg" name="email" id="email" placeholder="ivan@ivanov.com" value required>
+            </div>
+        </div>
+        <div class="row px-5 py-2">
+            <h3>Ваша задача</h3>
+        </div>
+        <div class="row px-5 py-2">
+            <div class="col-md-4">
+                <label for="new_task">Имя задачи</label>
+                <input type="text" class="form-control input-lg" name="new_task" id="new_task">
+            </div>
+            <div class="col-md-8">
+                <label for="new_description">Текст задачи</label>
+                <textarea type="text" class="form-control input-lg" name="new_description" id="new_description"
+                          aria-describedby="description_note" rows="5"></textarea>
+                <div id="description_note" class="form-text">В описании задачи пояните вид ответа, его размерность</div>
+            </div>
+        </div>
+        <div class="row px-5 py-2">
+            <div class="col-md-6">
+                <label for="new_answer">Ответ на задачу</label>
+                <input type="text" class="form-control input-lg" name="new_answer" id="new_answer"
+                          placeholder="Ответ..." aria-describedby="new_answer_note">
+                <div id="new_answer_note" class="form-text">
+                    Ответ укажите в виде десятичного числа, разделитель целой и дробной честей - точка</div>
+            </div>
+            <div class="col-md-6">
+                <label for="new_theme">К какому разделу физики относится эта задача?</label>
+                <input type="text" class="form-control input-lg" name="new_theme" id="new_theme"
+                       aria-describedby="theme_note" value required>
+                <div id=theme_note" class="form-text">Разделы: {{ theme_examples }}</div>
+            </div>
+        </div>
+        <div class="row px-5 py-2">
+            <div class="col-md-6">
+                <input type="hidden" class="form-control input-lg">
+            </div>
+            <div class="col-md-6">
+                <label for="new_author">Автор задачи</label>
+                <input type="text" class="form-control input-lg" name="new_author" id="new_author"
+                          aria-describedby="new_author_note">
+                <div id="new_author_note" class="form-text">Укажите автора задачи или источник, если известно</div>
+            </div>
+        </div>
+        <div class="row px-5 py-2">
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary" formaction="/send-task">Отправить</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
