@@ -1,0 +1,104 @@
+{% extends "base_page.html" %}
+
+{% block page-name %}
+Задачи по физике
+{% endblock %}
+
+{% block page-title %}
+Результат проверки
+{% endblock %}
+
+{% block page-lead %}
+    {% if success %}
+        {{ comment_all_right }}
+    {% else %}
+        {{ comment_no_task }}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container px-5 py-5" id="lesson-check">
+    {% if success %}
+    <div class="table-responsive">
+        <h4 class="text-center pb-4 border-bottom">Таблица результатов</h4>
+        <table class="table table-striped table-sm fs-5">
+            <thead>
+                <tr>
+                    <th scope="col" class="py-3">#</th>
+                    <th scope="col" class="py-3">Задача</th>
+                    <th scope="col" class="py-3 text-center">Ваш ответ</th>
+                    <th scope="col" class="py-3 text-center">Результат</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cnt, check, user_answer, check_comment, name in table_result %}
+                <tr>
+                    <td class="py-3">{{ cnt }}</td>
+                    <td class="py-3">{{ name }}</td>
+                    <td class="py-3 text-center">{{ user_answer }}</td>
+                    <td class="py-3 text-center {% if check %}text-bg-success{% else %}text-bg-danger{% endif %}">
+                        <span class="fw-bold">{{ check_comment }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="row px-5 py-2 border-bottom">
+        <h4 class="text-center pb-4">Статистика:</h4>
+            <ul class="fs-5">
+                <li>Всего задач: {{ all_count }}</li>
+                <li>Решено верно: {{ right_cnt }}</li>
+                <li>Процент решённых: {{ right_percent }}%</li>
+            </ul>
+    </div>
+    <div class="row px-5 py-3">
+        <h4 class="text-center pb-4 border-bottom">Список задач с условиями и результатом проверки ответа</h4>
+    </div>
+    {% for idx, user_answer, check_comment, name, description, image, theme, cmplx in result %}
+    <div class="row px-5 py-3">
+        <div class="col-md-12">
+            <div class="row px-2 py-1">
+                <div class="col-md-4">
+                    <h3 class="fs-4">{{ name }}</h3>
+                </div>
+                <div class="col-md-4">
+                </div>
+                <div class="col-md-4">
+                    <div class="row px-5 py-2">
+                        <h5 class="fs-5 text-end">{{ theme }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="row px-5 py-2">
+                <div class="col d-flex">
+                    <p class="fs-4">{{ description }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="row px-5 border-bottom">
+            <div class="col-md-6">
+                <label for="user_answer_{{ idx }}">Ваш Ответ:</label>
+                <p class="fs-4" id="user_answer_{{ idx }}">{{ user_answer }}</p>
+            </div>
+            <div class="col-md-6">
+                <label for="check_{{ idx }}">Результат проверки:</label>
+                <p class="fs-4" id="check_{{ idx }}">
+                    <span class="fw-bold">{{ check_comment }}</span>
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <div class="row px-5 py-2 border-bottom"></div>
+    {% endif %}
+    <div class="row px-5 py-2">
+        <h2 class="py-5 border-bottom">Что можно сделать?</h2>
+        <ul class="fs-5">
+        <li>Решить снова. Для этого перейдите к <a href="/lesson-settings">настройкам</a> ещё раз</li>
+        <li>Вернуться на <a href="/">главную</a></li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

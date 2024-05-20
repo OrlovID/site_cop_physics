@@ -19,7 +19,7 @@
 {% block content %}
 <div class="container px-5 py-5" id="lesson-main">
     {% if success %}
-    <form action="lesson-check-answers" >
+    <form action="lesson-check-answers" method="post">
         {% for idx, name, description, image, theme, cmplx in tasks_data %}
         <div class="row px-5 py-2">
             <div class="col-md-12">
@@ -71,6 +71,5 @@
         </form>
     </div>
     {% endif %}
-
 </div>
 {% endblock %}
