@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include
-from django.urls import path
+from django.urls import path, re_path
 from lessons import views
 
 urlpatterns = [
@@ -32,4 +32,5 @@ urlpatterns = [
     path('lesson-settings', views.lesson_settings),
     path('lesson-main', views.lesson_main),
     path('lesson-check-answers', views.lesson_check_answers),
+    re_path(r'^show-task/(?P<task_id>\d+)$', views.show_task)
 ]

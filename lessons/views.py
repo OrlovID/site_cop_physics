@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.core.cache import cache
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
+import django.http as http_dj
 # from . import tasks_work
 from . import tasks_db
 from .tasks_db import get_phys_themes, default_vals
@@ -75,7 +75,7 @@ def send_task(request):
                 context["comment"] = "Эта задача уже есть в базе данных"
         return render(request, "task_request.html", context=context)
     else:
-        return HttpResponseRedirect("/add-task")
+        return http_dj.HttpResponseRedirect("/add-task")
 
 
 def show_content_stats(request):
@@ -84,9 +84,6 @@ def show_content_stats(request):
     """
     stats = tasks_db.get_tasks_stats()
     return render(request, "content_stats.html", context=stats)
-
-
-# def show_task(request)
 
 
 def lesson_random(request):
@@ -169,7 +166,8 @@ def lesson_main(request):
         # 1 : N as whole quantity
         option = int(request.POST.get("options", 0))
         quantity = int(request.POST.get("quantity"))
-        flag, res, comment = tasks_db.get_tasks_lesson(themes_selected, option, quantity)
+        trust = bool(request.POST.get("only_trusted", False))
+        flag, res, comment = tasks_db.get_tasks_lesson(themes_selected, option, quantity, trust=trust)
         context["comment"] = comment
         context["success"] = flag
         if not flag:
@@ -236,3 +234,43 @@ def lesson_check_answers(request):
         context["success"] = False
         context["comment_no_task"] = "Сначал решите задачи."
     return render(request, "lesson_check.html", context=context)
+
+
+def show_task(request, task_id: int):
+    """
+    Показывает условие задачи и имеет форму ввода ответа если GET запрос.
+    Проверяет ответ и показывает результат если POST запрос,
+    или показывает правильный ответ - в зависимости от действий пользователя
+    """
+    task_id = int(task_id)
+    context = {}
+    task, flag = tasks_db.get_task_by_id(task_id)
+    context["success"] = flag
+    if not flag:
+        context["comment_flag"] = task  # это будет str
+    else:
+        context["task_id"] = task.task_id
+        context["name"] = task.name
+        context["description"] = task.description
+        context["theme"] = task.theme.theme
+        context["answer"] = task.answer
+        if request.method == "GET":
+            context["show_form"] = True
+            context["answered"] = False
+        elif request.method == "POST":
+            context["answered"] = True
+            user_answer = request.POST.get("user_answer", "")
+            is_correct = tasks_db.check_answers({task_id: user_answer})[task_id]
+            context["is_correct"] = is_correct
+            if is_correct:
+                context["show_form"] = False
+                context["comment"] = "Верный ответ!"
+            else:
+                context["show_form"] = True
+                context["comment"] = "Ответ неверен"
+        else:
+            return http_dj.HttpResponseBadRequest("/")
+    return render(request, "show_task.html", context=context)
+
+
+

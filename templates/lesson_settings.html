@@ -69,7 +69,13 @@
                 <input type="number" class="form-control input-lg" id="quantity" name="quantity" min="1" value required>
             </div>
         </div>
-        <div class="row px-5 py-2">
+        <div class="row px-5 py-2 border-bottom">
+            <label class="list-group-item d-flex gap-2">
+                <input class="form-check-input flex-shrink-0" type="checkbox" name="only_trusted" value="ON" checked>
+                <span>Только проверенные задачи</span>
+            </label>
+        </div>
+        <div class="row px-5 py-2 border-bottom">
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary" formaction="/lesson-main">Подтвердить</button>
             </div>

@@ -9,7 +9,8 @@
 {% endblock %}
 
 {% block page-lead %}
-Все задачи извлекаются из БД и динамически вставляются в таблицу.
+Все задачи извлекаются из БД и динамически вставляются в таблицу. <br>
+Показываются только проверенные задачи.
 {% endblock %}
 
 {% block content %}
@@ -26,14 +27,17 @@
                 </tr>
             </thead>
             <tbody>
-                {% for cnt, task, descr, theme, cmplx in tasks_lst %}
+                {% for cnt, idx, name, descr, theme, cmplx, trust in tasks_lst %}
+                {% if trust %}
+                <!-- Только проверенные задачи, возможность переключения может быть будет позже -->
                 <tr>
                     <td class="py-3">{{ cnt }}</td>
-                    <td class="py-3">{{ task }}</td>
+                    <td class="py-3"><a href="/show-task/{{ idx }}">{{ name }}</a></td>
                     <td class="py-3">{{ descr }}</td>
                     <td class="py-3">{{ theme }}</td>
                     <td class="py-3">{{ cmplx }}</td>
                 </tr>
+                {% endif %}
                 {% endfor %}
             </tbody>
         </table>

@@ -19,7 +19,7 @@
 {% block content %}
 <div class="container px-5 py-5" id="lesson-main">
     {% if success %}
-    <form action="lesson-check-answers" method="post">
+    <form action="/lesson-check-answers" method="post">
         {% for idx, name, description, image, theme, cmplx in tasks_data %}
         <div class="row px-5 py-2">
             <div class="col-md-12">
@@ -66,7 +66,7 @@
     <div class="row px-5 py-2">
         <p class="fs-4">Вероятная причина:</p>
         <p class="fs-4">{{ comment }}</p>
-        <form action="lesson-settings">
+        <form action="/lesson-settings">
             <button type="submit" class="btn btn-primary" >К настройкам</button>
         </form>
     </div>

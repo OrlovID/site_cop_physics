@@ -9,30 +9,32 @@
 {% endblock %}
 
 {% block page-lead %}
-Это страничка проекта про изучение математики. <br/>
-Этот проект и его исходный код можно использовать как reference или источник вдохновения для своего проекта.
+Этот проект с задачами по физике.<br/>
+Можно просмотреть условие конкретной задачи, либо списка случайно подобранных задач. <br>
+Также, можно ввести ответ в поле ответа, идущее к каждой задаче, и сайт автоматически его проверит и покажет результат
 {% endblock %}
 
 {% block content %}
 <div class="container px-4 py-5" id="project-contents">
-    <h2 class="pb-2 border-bottom">Что есть в этом проекте</h2>
+    <h2 class="pb-2 border-bottom">Features проекта</h2>
     <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
         <div class="col d-flex">
             <div class="icon-square text-bg-light d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
                 <svg class="bi" width="1em" height="1em">
-                    <use xlink:href="#cpu-fill"></use>
+                    <use xlink:href="static/bootstrap-icons.svg#cpu-fill"></use>
                 </svg>
             </div>
             <div>
                 <h3 class="fs-2">Список задач</h3>
-                <p>Списко всех задач с их кратким описанием</p>
+                <p>Список всех задач с их кратким описанием</p>
+                <p>Через список можно получит доступ к конкретной задаче</p>
                 <a href="/tasks-list" class="btn btn-primary">Посмотреть</a>
             </div>
         </div>
         <div class="col d-flex">
             <div class="icon-square text-bg-light d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
                 <svg class="bi" width="1em" height="1em">
-                    <use xlink:href="#cpu-fill"></use>
+                    <use xlink:href="static/bootstrap-icons.svg#cpu-fill"></use>
                 </svg>
             </div>
             <div>
@@ -46,28 +48,25 @@
         <div class="col d-flex">
             <div class="icon-square text-bg-light d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
                 <svg class="bi" width="1em" height="1em">
-                    <use xlink:href="#cpu-fill"></use>
+                    <use xlink:href="static/bootstrap-icons.svg#cpu-fill"></use>
                 </svg>
             </div>
             <div>
                 <h3 class="fs-2">Статистика</h3>
-                <p>Вы можете просмотреть статистику по содержащимся в базе данных задачам</p>
-                <p>
-                    Вы можете посмотреть следующую информацию: количество задач; количество слов;
-                    количество задач для каждого раздела физики ...
-                </p>
+                <p>Вы можете просмотреть статистику по содержащимся в базе данных задачам:</p>
+                <p>Количество задач, количество слов, количество задач для каждого раздела физики.</p>
                 <a href="/content-stats" class="btn btn-primary">
                     Изучить
                 </a>
             </div>
         </div>
     </div>
-    <h2 class="pb-2 border-bottom">Что можете сделать вы?</h2>
+    <h2 class="pb-2 border-bottom">Задачи, предлагаемые случайным образом</h2>
     <div class="row g-4 py-5 row-cols-1 row-cols-lg-2">
         <div class="col d-flex">
             <div class="icon-square text-bg-light d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
                 <svg class="bi" width="1em" height="1em">
-                    <use xlink:href="#cpu-fill"></use>
+                    <use xlink:href="static/bootstrap-icons.svg#cpu-fill"></use>
                 </svg>
             </div>
             <div>
@@ -79,7 +78,7 @@
         <div class="col d-flex">
             <div class="icon-square text-bg-light d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
                 <svg class="bi" width="1em" height="1em">
-                    <use xlink:href="#cpu-fill"></use>
+                    <use xlink:href="static/bootstrap-icons.svg#toggles2"></use>
                 </svg>
             </div>
             <div>
@@ -88,36 +87,6 @@
                 <p>Нажав на кнопку ниже, Вы перейдете к настроке занятия.</p>
                 <a href="/lesson-settings" class="btn btn-primary">К занятию</a>
             </div>
-        </div>
-    </div>
-    <div class="row g-4 py-5 row-cols-1 row-cols-lg-2">
-        <div class="col-lg-4">
-            <h4 class="py-1">Разнообразить контент</h4>
-        </div>
-        <div class="col-lg-8">
-            <p>Надо сделать: страницу настроек урока -> страница, показывающая задачи и ожидающая ввода ответа</p>
-        </div>
-    </div>
-    <div class="row g-4 py-5 row-cols-1 row-cols-lg-2">
-        <div class="col-lg-4">
-            <h4 class="py-1">Изменить вёрстку и/или дизайн-систему</h4>
-        </div>
-        <div class="col-lg-8">
-            <p>Этот проект использует <a href="https://getbootstrap.com">Bootstrap</a>. Попробуйте другие дизайн-системы, например:
-                <ul>
-                    <li><a href="https://materializecss.com">Materialize</a></li>
-                    <li><a href="https://semantic-ui.com">Semantic UI</a></li>
-                    <li><a href="https://get.foundation/templates.html">Foundation</a></li>
-                </ul>
-            </p>
-            <p>
-                Если же вам хочется оставить Bootstrap — измените вёрстку! Добавьте картинок, замените стили — словом, пробудите
-                внутреннего художника.
-            </p>
-            <p>
-                <span class="fst-italic">Вариант улучшения:</span> как правило, у сайта есть фавикон — маленькая иконка, отображающаяся
-                рядом с названием сайта во вкладке или окне браузера. Сейчас её нет — но вы можете её добавить.
-            </p>
         </div>
     </div>
 </div>

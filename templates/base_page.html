@@ -7,18 +7,26 @@
     {% load static %}
     <!-- CSS -->
     <link href="{% static 'bootstrap.css' %}" rel="stylesheet">
+    <!-- JS -->
+    <script src="{% static 'bootstrap.js' %}"></script>
+    <link rel="icon" href="{% static 'noun-physics-1881546.svg' %}" />
 </head>
 <body>
+<div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+            <div class="fs-3 mb-3">
+            <img src="{% static 'noun-physics-1881546.svg' %}" alt="Сборник задач по физике" width="32" height="32"/>
+            <span>Сборник задач по физике</span>
+            </div>
+        </a>
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a href="/" class="nav-link active" aria-current="page">Home</a></li>
+        </ul>
+    </header>
+</div>
 <main>
     <div class="container">
-        <header class="border-bottom">
-            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-                <div class="fs-3 mb-3">
-                    <img src="{% static 'calculator.svg' %}" alt="Сборник задач по физике" width="32" height="32"/>
-                    <span>Сборник задач по физике</span>
-                </div>
-            </a>
-        </header>
         <div class="p-5 mb-4 bg-light rounded-3" id="title-box">
             <div class="container-fluid py-5">
                 <h1 class="display-4 fw-bold">{% block page-title %}{% endblock %}</h1>

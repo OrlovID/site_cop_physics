@@ -1,0 +1,74 @@
+{% extends "base_page.html" %}
+
+{% block page-name %}
+Задача по физике
+{% endblock %}
+
+{% block page-title %}
+Задача по физике
+{% endblock %}
+
+{% block page-lead %}
+Эта задача выбрана из списка всех задач пользователем
+{% endblock %}
+
+{% block content %}
+<div class="container px-5 py-5 border-bottom" id="show-task-by-id">
+    {% if success %}
+    <div class="row px-5 py-2">
+        <div class="col-md-6">
+            <h3 class="fs-4">{{ name }}</h3>
+        </div>
+        <div class="col-md-6 align-right">
+            <div class="row px-5 py-2">
+                <h5 class="fs-5 text-end">Из&nbsp;раздела: {{ theme }}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="row px-5 py-2">
+        <div class="col d-flex">
+            <p class="fs-4">{{ description }}</p>
+        </div>
+    </div>
+    {% if show_form %}
+    <form method="post">
+        <div class="row px-5 py-2 border-bottom">
+            <div class="col-md-6">
+                <label for="user_answer">Ваш Ответ:</label>
+                <input type="text" class="form-control input-lg" name="user_answer" id="user_answer" value required>
+            </div>
+        </div>
+        <div class="row px-5 py-2">
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-primary" formaction="/show-task/{{task_id}}">Ответить</button>
+            </div>
+        </div>
+    </form>
+    {% endif %}
+    {% if answered %}
+    <div class="row px-5 py-2">
+       <h2 class="pb-2 border-bottom"></h2>
+        <p>Уважаемый пользователь, Ваш ответ принят. Результат: <br>
+            {% if is_correct %} <span class="fw-bold">{{ comment }}</span>
+            {% else %}<span class="fw-bold">{{ comment }}</span>{% endif %}<br>
+        </p>
+    </div>
+    <div class="row px-5 py-2">
+        <div class="col-md-6">
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
+                    aria-expanded="false" aria-controls="collapseExample">
+                    Показать ответ
+            </button>
+        </div>
+        <div class="collapse col-md-6" id="collapseExample">
+            <div class="card card-body">
+                Ответ: {{ answer }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% else %}
+    <p>{{comment_flag}}</p>
+    {% endif %}
+</div>
+{% endblock %}

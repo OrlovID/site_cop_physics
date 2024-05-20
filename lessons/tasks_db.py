@@ -1,25 +1,8 @@
 import random
 from typing import List, Tuple, Dict
-from django.db.models import QuerySet
-from django.db.models.query import EmptyQuerySet
-from django.db.models import Q
+from django.db.models import QuerySet, Q
+from django.forms.models import model_to_dict
 from lessons.models import PhysTasks, PhysThemes
-
-
-# globals
-# phys_themes = ["Undefined", "Механика", "Термодинамика", "Электричество", "Оптика", "Квантовая физика"]
-def get_phys_themes(with_idx=False) -> List[str] | List[Tuple[int, str]]:
-    """
-    Получение названий разделов физики без или вместе с индексами
-    """
-    res = []
-    for theme_entry in PhysThemes.objects.all():
-        if theme_entry.theme != "Undefined":
-            # Undefined - имя для всех неопределенных тем, их добавление должно быть исключено
-            res.append((theme_entry.id, theme_entry.theme))
-    if not with_idx:
-        res = [tup[1] for tup in res]
-    return res
 
 
 def default_vals() -> Dict:
@@ -39,23 +22,22 @@ def check_answers(user_answers: Dict[int, str]) -> Dict[int, bool]:
     return {task.task_id: task.check_answer(user_answers[task.task_id]) for task in tasks}
 
 
-def get_tasks_for_table() -> List:
+##########################
+# database general using #
+##########################
+
+def get_phys_themes(with_idx=False) -> List[str] | List[Tuple[int, str]]:
     """
-    Получение необходимых элементов для отображения таблицы задач
-    Описание краткое <=100 символов; ключи скрыты так как сортировка по имени, теме.
+    Получение названий разделов физики без или вместе с индексами
     """
-    tasks_lst = []
-    for idx, item in enumerate(PhysTasks.objects.all()):
-        if len(item.description) > 100:
-            short_description = item.description[:100] + "..."
-        else:
-            short_description = item.description
-        if item.complexity:
-            cmplx = item.complexity
-        else:
-            cmplx = "-"
-        tasks_lst.append([idx + 1, item.name, short_description, item.theme.theme, cmplx])
-    return tasks_lst
+    res = []
+    for theme_entry in PhysThemes.objects.all():
+        if theme_entry.theme != "Undefined":
+            # Undefined - имя для всех неопределенных тем, их добавление должно быть исключено
+            res.append((theme_entry.id, theme_entry.theme))
+    if not with_idx:
+        res = [tup[1] for tup in res]
+    return res
 
 
 def db_write_task(name: str, description: str, answer: str, author: str = "", image: str = "",
@@ -78,6 +60,59 @@ def db_write_task(name: str, description: str, answer: str, author: str = "", im
             "source": source}
     _, flag = PhysTasks.objects.get_or_create(**args)
     return flag
+
+
+def get_tasks_filter(filtering: Dict) -> List[Dict]:
+    """
+    Получает по заданному фильтру (критерию) filtering задачи из БД в виде списка словарей (ключи == поля в БД)
+    """
+    tasks = PhysTasks.objects.filter(**filtering).values()
+    res = list(tasks)
+    return res
+
+
+def get_task_by_id(task_id: int, as_dict=False) -> Tuple[PhysTasks | Dict | str, bool]:
+    """
+    Получение задачи из БД по первичному ключу, опционально в виде словаря
+    2 возвращаемых значения: если успех, то задача и True,
+    иначе: сообщение с ошибкой и False
+    """
+    flag = True
+    try:
+        task = PhysTasks.objects.get(task_id=task_id)
+    except PhysTasks.DoesNotExist:
+        res = "DoesNotExist"
+        flag = False
+    # MultipleObjectsReturned невозможно так ка первичный ключ
+    else:
+        if as_dict:
+            res = model_to_dict(task)
+        else:
+            res = task
+    return res, flag
+
+
+##########################
+# special database using #
+##########################
+
+def get_tasks_for_table() -> List:
+    """
+    Получение необходимых элементов для отображения таблицы задач
+    Описание краткое <=100 символов; ключи скрыты так как сортировка по имени, теме.
+    """
+    tasks_lst = []
+    for idx, item in enumerate(PhysTasks.objects.all()):
+        if len(item.description) > 100:
+            short_description = item.description[:100] + "..."
+        else:
+            short_description = item.description
+        if item.complexity:
+            cmplx = item.complexity
+        else:
+            cmplx = "-"
+        tasks_lst.append([idx + 1, item.task_id, item.name, short_description, item.theme.theme, cmplx, item.trust])
+    return tasks_lst
 
 
 def get_tasks_stats() -> Dict:
@@ -109,13 +144,6 @@ def get_tasks_stats() -> Dict:
     return stats
 
 
-def get_task_by_id(task_id: int) -> PhysTasks:
-    """
-    Получение задачи из БД по первичному ключу
-    """
-    return PhysTasks.objects.get(task_id=task_id)
-
-
 def get_random_task(trust=True) -> Dict:
     """
     Получение одной случайной задачи
@@ -123,7 +151,7 @@ def get_random_task(trust=True) -> Dict:
     trusted_tasks_count = PhysTasks.objects.filter(trust=trust).count()
     random.seed()
     rand_int = random.randint(1, trusted_tasks_count)
-    random_task = get_task_by_id(rand_int)
+    random_task, _ = get_task_by_id(rand_int)
     res = {"task_id": random_task.task_id, "name": random_task.name, "description": random_task.description,
            "image": random_task.image, "theme": random_task.theme.theme, "complexity": random_task.complexity}
     return res
@@ -147,16 +175,8 @@ def get_random_tasks_filter(filtering: Dict, quantity=1) -> List:
     return res
 
 
-def get_tasks_filter(filtering: Dict) -> List[Dict]:
-    """
-    Получает по заданному фильтру (критерию) filtering задачи из БД в виде списка словарей (ключи == поля в БД)
-    """
-    tasks = PhysTasks.objects.filter(**filtering).values()
-    res = list(tasks)
-    return res
-
-
-def get_tasks_lesson(selected_themes: List[str], option: int, quantity: int) -> Tuple[bool, List[Dict], str]:
+def get_tasks_lesson(selected_themes: List[str], option: int, quantity: int, trust=True) \
+        -> Tuple[bool, List[Dict], str]:
     """
     Получает из БД задачи для урока, по темам 'selected_themes' с опцией 'option' и в количестве 'quantity'
         # options:
@@ -169,10 +189,10 @@ def get_tasks_lesson(selected_themes: List[str], option: int, quantity: int) -> 
         return False, [], "Введите положительное количество"
     if option == 0:
         for theme in selected_themes:
-            buf = get_random_tasks_filter({"theme": theme}, quantity=quantity)
+            buf = get_random_tasks_filter({"theme": theme, "trust": trust}, quantity=quantity)
             resbuf.extend(buf)
     elif option == 1:
-        resbuf = get_random_tasks_filter({"theme__in": selected_themes, "trust": True}, quantity=quantity)
+        resbuf = get_random_tasks_filter({"theme__in": selected_themes, "trust": trust}, quantity=quantity)
     else:
         return False, [], "Выбранная опция не распознана"
     for task in resbuf:

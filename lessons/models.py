@@ -35,7 +35,7 @@ class PhysTasks(models.Model):
     source = models.TextField(default="db")
 
     class Meta:
-        ordering = ["trust", "theme", "name"]
+        ordering = ["-trust", "theme", "name"]
 
     def check_answer(self, user_answer: str) -> bool:
         return user_answer.replace(',', '.') == str(self.answer).replace(',', '.')
