@@ -6,9 +6,13 @@ from .models import PhysThemes, PhysTasks
 
 
 class PhysTasksAdmin(admin.ModelAdmin):
-    list_display = ('name', 'descr_shorter', 'theme')
-    list_filter = ('theme', "trust")
+    list_display = ('name', 'descr_shorter', 'display_theme')
+    list_filter = ('theme__theme', "trust")
 
 
-admin.site.register(PhysThemes)
+class PhysThemesAdmin(admin.ModelAdmin):
+    pass
+
+
+admin.site.register(PhysThemes, PhysThemesAdmin)
 admin.site.register(PhysTasks, PhysTasksAdmin)

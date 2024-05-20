@@ -9,9 +9,10 @@
 {% endblock %}
 
 {% block page-lead %}
-Когда вы нажмёте на кнопку &laquo;Отправить&raquo;, веб-приложению отправится POST-запрос.
-При этом в полях <span class="fst-italic">Имя</span> и <span class="fst-italic">Email</span> есть атрибут
-<code>value required</code>, который подсказывает пользователю о необходимости заполнения — это свойство Bootstrap.
+    <p class="fs-4">
+        Вы можете предложить свою задачу, заполнив поля формы ниже. <br>
+        Намите на кнопку &laquo;Отправить&raquo;, и если не будет ошибок, то ваша задача попадет в базу данных
+    </p>
 {% endblock %}
 
 
@@ -43,7 +44,7 @@
                 <label for="new_description">Текст задачи</label>
                 <textarea type="text" class="form-control input-lg" name="new_description" id="new_description"
                           aria-describedby="description_note" rows="5"></textarea>
-                <div id="description_note" class="form-text">В описании задачи пояните вид ответа, его размерность</div>
+                <div id="description_note" class="form-text">В описании задачи поясните вид ответа, его размерность</div>
             </div>
         </div>
         <div class="row px-5 py-2">

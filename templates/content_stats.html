@@ -13,7 +13,7 @@
 
 {% block content %}
 <div class="container px-4 py-5" id="stats">
-    <div>
+    <div class="text-center">
         <h3 class="py-2">Количество задач</h3>
     </div>
     <div class="row text-center">
@@ -27,10 +27,10 @@
         </div>
         <div class="col-md-4">
             <h4>{{ tasks_added }}</h4>
-            <p class="text-muted">добавленных через <a href="/add-task">форму добавления термина</a></p>
+            <p class="text-muted">добавленных через <a href="/add-task">форму добавления задачи</a></p>
         </div>
     </div>
-    <div>
+    <div class="text-center">
         <h3 class="py-2">Описания</h3>
     </div>
     <div class="row text-center">
@@ -47,25 +47,23 @@
             <p class="text-muted">минимум</p>
         </div>
     </div>
-    <div>
+    <div class="row text-center container px-4 py-5">
         <h3 class="py-2">Статистика по разделам физики</h3>
-    </div>
-    <div class="container px-4 py-5">
         <div class="table-responsive">
             <table class="table table-striped table-sm">
                 <thead>
-                    <tr>
-                        <th scope="col" class="py-3">Раздел</th>
-                        <th scope="col" class="py-3">количество задач</th>
-                    </tr>
+                <tr>
+                    <th scope="col" class="py-3">Раздел</th>
+                    <th scope="col" class="py-3">количество задач</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {% for theme, cnt in themes_cnt_lst %}
-                    <tr>
-                        <td class="py-3">{{ theme }}</td>
-                        <td class="py-3">{{ cnt }}</td>
-                    </tr>
-                    {% endfor %}
+                {% for theme, cnt in themes_cnt_lst %}
+                <tr>
+                    <td class="py-3">{{ theme }}</td>
+                    <td class="py-3">{{ cnt }}</td>
+                </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>

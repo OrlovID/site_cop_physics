@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.core.cache import cache
+from django.http import HttpResponse
 # from . import tasks_work
 from . import tasks_db
 from .tasks_db import get_phys_themes, default_vals
@@ -51,8 +52,9 @@ def send_task(request):
         else:
             context["success"] = True
             context["comment"] = "Ваша задача принята"
-            tasks_db.write_task(name=new_task, description=new_description, theme=new_theme, complexity=new_cmplx,
-                                image=new_image, answer=new_answer, author=new_author, trust=new_trust, source="user")
+            tasks_db.db_write_task(name=new_task, description=new_description, answer=new_answer, author=new_author,
+                                   image=new_image, theme=new_theme, complexity=new_cmplx, trust=new_trust,
+                                   source="user")
         if context["success"]:
             context["success-title"] = ""
         return render(request, "task_request.html", context=context)
@@ -72,23 +74,21 @@ def lesson_random(request):
     context = {"show_conclusion": False}
     if request.session.get("task_given", False) and "task_data" in request.session:
         task_id = request.session["task_id"]
-        current_task = tasks_db.get_task_by_id(task_id)
+        # current_task = tasks_db.get_task_by_id()
         context.update(request.session["task_data"])
         user_answer = request.GET.get("user_answer", "")
         if user_answer != "":
             # Пользователь ввел ответ
             context["show_conclusion"] = True
-            if tasks_db.check_answer(current_task, user_answer):
+            check_res = tasks_db.check_answers([task_id,], [user_answer,])[task_id]
+            if check_res:
                 del request.session["task_id"]
                 del request.session["task_given"]
                 context["success"] = True
-                context["comment"] = ("Вы ответили верно! \n "
-                                      "Можете перезагрузить страницу чтобы получить новую задачу, "
-                                      "или нажать кнопку")
+                context["comment"] = "Можете перезагрузить страницу чтобы получить новую задачу"
             else:
                 context["success"] = False
-                context["comment"] = ("Ответ неверный. \n"
-                                      "Попробуйте ещё раз, или нажмите на кнопку для получения новой задачи")
+                context["comment"] = "Попробуйте ещё раз, или нажмите на кнопку для получения новой задачи"
         else:
             # Пользователь не вводил ответ, но все ещё та же задача (перезагрузка страницы)
             context["show_conclusion"] = False
@@ -117,26 +117,62 @@ def lesson_settings(request, retry: bool = False, comment: str = ""):
     """if len(comment) > 0 and retry:
         context["comment"] = comment
         context["retry"] = retry"""
-    context["idx_themes"] = tasks_db.get_phys_themes_numerical()
-    request.session["idx_themes"] = (context["idx_themes"]).copy()
+    context["idx_themes"] = tasks_db.get_phys_themes_idx()
+    # request.session["idx_themes"] = (context["idx_themes"]).copy()
     return render(request, "lesson_settings.html", context=context)
 
 
 def lesson_main(request):
     context = dict()
     if request.method == "POST":
-        idx_themes = request.session["idx_themes"]
         cache.clear()
+        idx_themes = tasks_db.get_phys_themes_idx()
         themes_selected = []
         for idx, theme in idx_themes:
             if f"theme_{idx}" in request.POST.keys():
                 themes_selected.append(theme)
+        if len(themes_selected) == 0:
+            context["comment"] = "Выберете хотя бы одну тему в списке настроек"
+            context["success"] = False
+            # render page with retry option: href="lesson-settings"
+            return render(request, "lesson_main.html", context=context)
         # options:
         # 0 : N for each theme
         # 1 : N as whole quantity
         option = int(request.POST.get("options", 0))
         quantity = int(request.POST.get("quantity"))
-        if len(themes_selected) == 0:
-            comment = "Выберете хотя бы одну тему"
-            lesson_settings(request, retry=True, comment=comment)
-    return render(request, "lesson_main.html", context=context)
+        flag, res, comment = tasks_db.get_tasks_lesson(themes_selected, option, quantity)
+        context["comment"] = comment
+        context["success"] = flag
+        if not flag:
+            return render(request, "lesson_main.html", context=context)
+        id_lst = [entry["task_id"] for entry in res]
+        tasks_data = [(entry["task_id"], entry["name"], entry["description"], entry["image"], entry["theme"],
+                       entry["complexity"]) for entry in res]
+        request.session["id_lst"] = id_lst
+        context["tasks_data"] = tasks_data
+        return render(request, "lesson_main.html", context=context)
+    else:
+        context["comment"] = "Похоже, что Вы не заполнили форму на странице настроек."
+        context["success"] = False
+        return render(request, "lesson_main.html", context=context)
+
+
+def lesson_check_answers(request):
+    context = dict()
+    if request.method == "POST":
+        id_lst = request.session["id_lst"]
+        user_answers = {idx: request.POST.get(f"user_answer_{idx}", "") for idx in id_lst}
+        check_res = tasks_db.check_answers(id_lst, user_answers)
+        all_right = True
+        for check_bool in check_res:
+            all_right = all_right and check_bool
+        context["all_right"] = all_right
+        context["result"] = tuple(check_res.items())
+
+        return render(request, "lesson_checking.html", context=context)
+    else:
+        # return render(request, "lesson_checking.html", context=context)
+        context["comment"] = "Нечего проверять!"
+        context["retry"] = True
+        return HttpResponse("Нечего проверять!")

@@ -31,5 +31,5 @@ urlpatterns = [
     path('lesson-random-reset', views.lesson_random_reset),
     path('lesson-settings', views.lesson_settings),
     path('lesson-main', views.lesson_main),
-
+    path('lesson-check-answers', views.lesson_check_answers),
 ]

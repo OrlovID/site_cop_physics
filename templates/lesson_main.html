@@ -1,0 +1,76 @@
+{% extends "base_page.html" %}
+
+{% block page-name %}
+Задачи по физике
+{% endblock %}
+
+{% block page-title %}
+Список задач согласно критериям
+{% endblock %}
+
+{% block page-lead %}
+{% if success %}
+Решите предложенные задачи. Ответы ответы будут проверены после нажатия на кнопку &laquo;Отправить&raquo;.
+{% else %}
+Ой! Похоже что случилась ошибка с настройками...
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container px-5 py-5" id="lesson-main">
+    {% if success %}
+    <form action="lesson-check-answers" >
+        {% for idx, name, description, image, theme, cmplx in tasks_data %}
+        <div class="row px-5 py-2">
+            <div class="col-md-12">
+                <div class="row px-2 py-1">
+                    <div class="col-md-4">
+                        <h3 class="fs-4">{{ name }}</h3>
+                    </div>
+                    <div class="col-md-4">
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row px-5 py-2">
+                            <h5 class="fs-5 text-end">{{ theme }}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="row px-5 py-2">
+                    <div class="col d-flex">
+                        <p class="fs-4">{{ description }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row px-5 py-2">
+                <div class="col-md-6">
+                    <label for="user_answer_{{ idx }}">Ваш Ответ:</label>
+                    <input type="text" class="form-control input-lg" name="user_answer_{{ idx }}"
+                           id="user_answer_{{ idx }}">
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="row px-5 py-2">
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-6">
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary" >Проверить!</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    {% else %}
+    <div class="row px-5 py-2">
+        <p class="fs-4">Вероятная причина:</p>
+        <p class="fs-4">{{ comment }}</p>
+        <form action="lesson-settings">
+            <button type="submit" class="btn btn-primary" >К настройкам</button>
+        </form>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

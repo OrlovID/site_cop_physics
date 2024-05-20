@@ -2,7 +2,14 @@ from django.db import models
 
 
 class PhysThemes(models.Model):
-    theme = models.CharField(primary_key=True, max_length=100)
+    id = models.AutoField(primary_key=True)
+    theme = models.CharField(unique=True, max_length=100)
+
+    def __str__(self):
+        return self.theme
+
+    class Meta:
+        managed = False
 
 
 class PhysTasks(models.Model):
@@ -42,5 +49,7 @@ class PhysTasks(models.Model):
     descr_shorter.short_description = 'Краткое описание'
 
     def display_theme(self):
-        return self.theme.to_python(str)
+        return self.theme.theme
     display_theme.short_description = 'Тема'
+
+
